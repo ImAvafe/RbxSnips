@@ -1,2 +1,3 @@
 # RobloxSnips
-General-use snippets/modules for Roblox games
+
+Little snippets/modules for Roblox that aren't significant enough to have their own repo
