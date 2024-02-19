@@ -1,0 +1,11 @@
+[package]
+name = "imavafe/attribute-value"
+description = "Wraps given Attribute in a Fusion Value"
+version = "0.1.0"
+license = "MIT"
+authors = ["Avafe"]
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[dependencies]
+Fusion = "elttob/fusion@0.2.0"

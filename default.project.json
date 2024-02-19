@@ -1,0 +1,12 @@
+{
+  "name": "RobloxSnips",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "RobloxSnips": {
+        "$path": "modules"
+      }
+    }
+  }
+}
