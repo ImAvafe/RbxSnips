@@ -74,7 +74,6 @@ function CoreThemer:SetAvatarContextMenuTheme(Enabled: boolean?, Options: table?
 
 	CallCore("SetCore", "AvatarContextMenuEnabled", true)
 	CallCore("SetCore", "AvatarContextMenuTheme", Options)
-	CallCore("SetCore", "AvatarContextMenuTarget", game.Players.LocalPlayer)
 end
 
 function CoreThemer:SetShiftLockKeys(Keys: string?)
