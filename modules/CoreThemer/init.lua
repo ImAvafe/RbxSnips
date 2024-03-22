@@ -1,7 +1,6 @@
 local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
 local TextChatService = game:GetService("TextChatService")
-
-local CallCore = require(script.CallCore)
 
 local MouseLockController = Players.LocalPlayer.PlayerScripts
 	:WaitForChild("PlayerModule")
@@ -50,7 +49,10 @@ local SELECTION_INDICATOR_OPTIONS = {
 
 type AvatarContextMenuButton = {}
 
-local CoreThemer = {}
+local CoreThemer = {
+	_AvatarSelectionHighlight = Instance.new("Highlight"),
+	_AvatarSelectionConnection = nil,
+}
 
 function CoreThemer:SetDefaults()
 	self:SetChatWindowTheme()
@@ -60,10 +62,21 @@ function CoreThemer:SetDefaults()
 	self:SetAvatarContextMenuTheme()
 end
 
-function CoreThemer:SetAvatarContextMenuTheme(Enabled: boolean?, Options: table?)
+function CoreThemer:SetAvatarContextMenuEnabled(Enabled: boolean)
 	if Enabled == nil then
 		Enabled = true
 	end
+
+	self:CallCore("SetCore", "AvatarContextMenuEnabled", Enabled)
+
+	if Enabled then
+		self:_StartAvatarSelectionHandler()
+	else
+		self:_StopAvatarSelectionHandler()
+	end
+end
+
+function CoreThemer:SetAvatarContextMenuTheme(Options: table?)
 	if Options == nil then
 		Options = AVATAR_CONTEXT_MENU_THEME
 
@@ -72,8 +85,7 @@ function CoreThemer:SetAvatarContextMenuTheme(Enabled: boolean?, Options: table?
 		Options.SelectedCharacterIndicator = SelectionIndicator
 	end
 
-	CallCore("SetCore", "AvatarContextMenuEnabled", true)
-	CallCore("SetCore", "AvatarContextMenuTheme", Options)
+	self:CallCore("SetCore", "AvatarContextMenuTheme", Options)
 end
 
 function CoreThemer:SetShiftLockKeys(Keys: string?)
@@ -123,10 +135,62 @@ function CoreThemer:SetBubbleChatTheme(Options: table?)
 	end
 end
 
+function CoreThemer:CallCore(Method, ...)
+	local Result = {}
+
+	for _ = 1, 8 do
+		Result = { pcall(StarterGui[Method], StarterGui, ...) }
+		if Result[1] then
+			break
+		end
+		task.wait()
+	end
+
+	return unpack(Result)
+end
+
+function CoreThemer:_StartAvatarSelectionHandler()
+	self:_StopAvatarSelectionHandler()
+
+	local Mouse = Players.LocalPlayer:GetMouse()
+	self._AvatarSelectionConnection = Mouse.Move:Connect(function()
+		self._AvatarSelectionHighlight.Adornee = nil
+
+		local Target = Mouse.Target
+		if Target then
+			local Character = Target:FindFirstAncestorOfClass("Model")
+			if Character then
+				local Player = Players:GetPlayerFromCharacter(Character)
+				if Player then
+					self._AvatarSelectionHighlight.Adornee = Character
+				end
+			end
+		end
+	end)
+end
+
+function CoreThemer:_StopAvatarSelectionHandler()
+	if self._AvatarSelectionConnection then
+		self._AvatarSelectionConnection:Disconnect()
+		self._AvatarSelectionConnection = nil
+	end
+
+	self._AvatarSelectionHighlight.Adornee = nil
+end
+
 function CoreThemer:_SetProperties(Instance: Instance, Properties: table)
 	for Property, Value in pairs(Properties) do
 		Instance[Property] = Value
 	end
 end
+
+function CoreThemer:_Initialize()
+	self._AvatarSelectionHighlight.Parent = Players.LocalPlayer.PlayerGui
+	self._AvatarSelectionHighlight.FillTransparency = 1
+	self._AvatarSelectionHighlight.OutlineTransparency = 0.1
+	self._AvatarSelectionHighlight.DepthMode = Enum.HighlightDepthMode.Occluded
+end
+
+CoreThemer:_Initialize()
 
 return CoreThemer
