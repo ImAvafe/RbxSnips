@@ -1,109 +1,12 @@
 local Players = game:GetService("Players")
 
-local DEFAULT_SOUNDS = {
-	Brick = {
-		SoundId = "rbxassetid://16829037315",
-		Volume = 0.4,
-	},
-	Climb = {
-		SoundId = "rbxassetid://145180175",
-		Volume = 0.3,
-	},
-	Cobblestone = {
-		SoundId = "rbxassetid://16829037315",
-		Volume = 0.4,
-	},
-	Concrete = {
-		SoundId = "rbxassetid://16829037315",
-		Volume = 0.4,
-	},
-	CorrodedMetal = {
-		SoundId = "rbxassetid://16829038373",
-		Volume = 1.2,
-	},
-	DiamondPlate = {
-		SoundId = "rbxassetid://16829038373",
-		Volume = 1.2,
-	},
-	Fabric = {
-		SoundId = "rbxassetid://16829153060",
-		Volume = 0.7,
-	},
-	Foil = {
-		SoundId = "rbxassetid://16829153060",
-		Volume = 0.8,
-	},
-	ForceField = {
-		SoundId = "rbxassetid://16829153060",
-		Volume = 0.8,
-	},
-	Glass = {
-		SoundId = "rbxassetid://16829038373",
-		Volume = 1.2,
-	},
-	Granite = {
-		SoundId = "rbxassetid://16829037315",
-		Volume = 0.4,
-	},
-	Grass = {
-		SoundId = "rbxassetid://16829038667",
-		Volume = 0.35,
-	},
-	Ice = {
-		SoundId = "rbxassetid://16829037315",
-		Volume = 0.4,
-	},
-	LeafyGrass = {
-		SoundId = "rbxassetid://16829038202",
-		Volume = 0.35,
-	},
-	Marble = {
-		SoundId = "rbxassetid://16829037315",
-		Volume = 0.4,
-	},
-	Metal = {
-		SoundId = "rbxassetid://16829038373",
-		Volume = 1.2,
-	},
-	Neon = {
-		SoundId = "rbxassetid://16829153060",
-		Volume = 0.8,
-	},
-	Pebble = {
-		SoundId = "rbxassetid://16829037315",
-		Volume = 0.4,
-	},
-	Plastic = {
-		SoundId = "rbxassetid://16829153060",
-		Volume = 0.8,
-	},
-	Sand = {
-		SoundId = "rbxassetid://16829037901",
-		Volume = 0.35,
-	},
-	Slate = {
-		SoundId = "rbxassetid://16829037315",
-		Volume = 0.4,
-	},
-	SmoothPlastic = {
-		SoundId = "rbxassetid://16829153060",
-		Volume = 0.8,
-	},
-	Snow = {
-		SoundId = "rbxassetid://16829038510",
-		Volume = 0.3,
-	},
-	Wood = {
-		SoundId = "rbxassetid://16829037092",
-		Volume = 0.45,
-	},
-	WoodPlanks = {
-		SoundId = "rbxassetid://16829037092",
-		Volume = 0.45,
-	},
-}
+local DefaultSounds = require(script.DefaultSounds)
 
-local Footstepper = {}
+local BLACKLISTEED_MATERIALS = { Enum.Material.Air, Enum.Material.Water }
+
+local Footstepper = {
+	BaseVolume = 5,
+}
 
 function Footstepper:UpdateSounds(Sounds: table, SoundProperties: table)
 	for _, Sound in ipairs(Sounds) do
@@ -162,6 +65,9 @@ function Footstepper:_UpdatePlayingSound(Sounds: Attachment, WalkSpeed: number, 
 
 	if WalkSpeed >= WalkSpeed / 2 then
 		local Sound = Sounds:FindFirstChild(string.split(tostring(FloorMaterial), "Enum.Material.")[2])
+		if Sound == nil and table.find(BLACKLISTEED_MATERIALS, FloorMaterial) == nil then
+			Sound = Sounds:FindFirstChild("Plastic")
+		end
 
 		if Sound then
 			Sound.PlaybackSpeed = WalkSpeed / 13
@@ -174,25 +80,25 @@ end
 function Footstepper:_SetUpSounds(HumanoidRootPart: BasePart)
 	local SoundGroup = Instance.new("SoundGroup")
 	SoundGroup.Name = "FootstepSounds"
-	SoundGroup.Volume = 4
+	SoundGroup.Volume = self.BaseVolume
 
 	local Sounds = Instance.new("Attachment")
 	Sounds.Name = "Sounds"
 	Sounds.Parent = HumanoidRootPart
 
-	for Name, _ in pairs(DEFAULT_SOUNDS) do
+	for Name, _ in pairs(DefaultSounds) do
 		local Sound = Instance.new("Sound")
 		Sound.Name = Name
 		Sound.Looped = true
-		Sound.RollOffMaxDistance = 100
-		Sound.RollOffMinDistance = 10
+		Sound.RollOffMaxDistance = 50
+		Sound.RollOffMinDistance = 5
 		Sound.SoundGroup = SoundGroup
 		Sound.Parent = Sounds
 	end
 
 	SoundGroup.Parent = HumanoidRootPart
 
-	self:UpdateSounds(Sounds:GetChildren(), DEFAULT_SOUNDS)
+	self:UpdateSounds(Sounds:GetChildren(), DefaultSounds)
 
 	return Sounds
 end
