@@ -1,4 +1,4 @@
-<p align="center" style="font-size: 3em; font-weight: 600;">🧩 RbxSnips</p>
+<h1 align="center">🧩 RbxSnips</h1>
 
 <p align="center">
   <a href="https://discord.gg/fyeYey62Dm"><img src="https://dcbadge.vercel.app/api/server/fyeYey62Dm"></img></a>
