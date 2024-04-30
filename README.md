@@ -1,3 +1,5 @@
+<p align="center" style="font-size: 3em; font-weight: 600;">🧩 RbxSnips</p>
+
 <p align="center">
   <a href="https://discord.gg/fyeYey62Dm"><img src="https://dcbadge.vercel.app/api/server/fyeYey62Dm"></img></a>
 </p>
@@ -9,6 +11,10 @@
 
 ---
 
-# RbxSnips
+## Instructions 🤓
 
-Little snippets/modules for Roblox that aren't significant enough to have their own repo
+Just copy and paste whatever you need into your own project. Nothing's on Wally yet.
+
+##
+
+[![By Avafe](/gh-assets/watermark.svg)](https://avafe.me)
