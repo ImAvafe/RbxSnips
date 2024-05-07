@@ -107,4 +107,4 @@ function SafeInstance.wrap(Instance: any): SafeInstance
 	return self
 end
 
-return SafeInstance
+return SafeInstance.wrap
