@@ -60,11 +60,13 @@ function ToolComponent._HandleEquip(Component: ToolComponent)
 end
 
 function ToolComponent._HandleUnequip(Component: ToolComponent)
-	local OldHolder = table.clone(Component.Holder)
-	Component.Holder = nil
+	if Component.Holder then
+		local OldHolder = table.clone(Component.Holder)
+		Component.Holder = nil
 
-	if Component.ToolUnequip then
-		Component:ToolUnequip(OldHolder)
+		if Component.ToolUnequip then
+			Component:ToolUnequip(OldHolder)
+		end
 	end
 end
 
