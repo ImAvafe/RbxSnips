@@ -22,13 +22,13 @@ function Footstepper:UpdateSounds(Sounds: table, SoundProperties: table)
 end
 
 function Footstepper:_HandleCharacter(Character: Model)
-	local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
-	local Humanoid = Character:FindFirstChildOfClass("Humanoid")
+	local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
+	local Humanoid = Character:FindFirstChild("Humanoid")
 
 	if Humanoid and HumanoidRootPart then
 		local Sounds = self:_SetUpSounds(HumanoidRootPart)
 
-		local DefaultSound = HumanoidRootPart:WaitForChild("Running")
+		local DefaultSound = HumanoidRootPart:FindFirstChild("Running")
 		if DefaultSound then
 			DefaultSound:Destroy()
 		end
